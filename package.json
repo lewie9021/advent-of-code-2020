@@ -4,5 +4,13 @@
   "description": "Advent of Code 2020",
   "author": "Lewis Barnes",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "scripts": {
+    "run:day-1": "ts-node src/day-1/dayOne.ts"
+  },
+  "devDependencies": {
+    "@types/node": "16.11.6",
+    "ts-node": "10.4.0",
+    "typescript": "4.4.4"
+  }
 }
