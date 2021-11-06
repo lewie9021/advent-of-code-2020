@@ -46,7 +46,7 @@ export const calculatePartTwo = (target: number, report: Array<number>) => {
 }
 
 runWhenUsingCommandLine(() => {
-  const report = parseExpenseReport(path.join(__dirname, "expenseReport.txt"))
+  const report = parseExpenseReport(path.join(__dirname, "input.txt"))
 
   console.log("Part 1:", calculatePartOne(2020, report));
   console.log("Part 2:", calculatePartTwo(2020, report));
