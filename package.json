@@ -1,0 +1,8 @@
+{
+  "name": "advent-of-code-2020",
+  "version": "1.0.0",
+  "description": "Advent of Code 2020",
+  "author": "Lewis Barnes",
+  "license": "MIT",
+  "private": true
+}
