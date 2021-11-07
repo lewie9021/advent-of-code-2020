@@ -4,57 +4,67 @@ import { readTextFile } from "../helpers/fileSystem";
 import { runWhenUsingCommandLine } from "../helpers/execution";
 import { getInputLines } from "../helpers/input";
 
-interface PasswordPolicy {
-  min: number;
-  max: number;
+interface LineFragments {
+  range: [number, number];
   letter: string;
-}
-
-interface DatabaseEntry {
   password: string;
-  policy: PasswordPolicy;
 }
 
-export const parseInput = (input: string): Array<DatabaseEntry> => {
-  return getInputLines(input)
-    .map((line) => {
-      const groups = line.match(/(\d+\-\d+)\s(\w)\:\s(\w+)/);
+const getLineFragments = (line: string): LineFragments => {
+  const groups = line.match(/(\d+\-\d+)\s(\w)\:\s(\w+)/);
 
-      const [minOccurrences, maxOccurrences] = groups[1]
-        .split("-")
-        .map((x) => parseInt(x));
+  const [min, max] = groups[1]
+    .split("-")
+    .map((x) => parseInt(x));
 
-      return {
-        password: groups[3],
-        policy: {
-          min: minOccurrences,
-          max: maxOccurrences,
-          letter: groups[2],
-        }
-      };
-    });
-};
-
-const getValidPasswords = (database: Array<DatabaseEntry>) => {
-  return database.filter(({ password, policy }) => {
-    const matches = password.match(new RegExp(policy.letter, "g"));
-    const count = matches?.length || 0;
-
-    return count >= policy.min && count <= policy.max;
-  });
+  return {
+    range: [min, max],
+    letter: groups[2],
+    password: groups[3],
+  };
 }
 
-export const calculatePartOne = (database: Array<DatabaseEntry>) => {
-  return getValidPasswords(database).length;
+export const calculatePartOne = (input: string) => {
+  const validPasswords = getInputLines(input)
+    .reduce((result, line) => {
+      const { range, letter, password } = getLineFragments(line);
+      const [minOccurrences, maxOccurrences] = range;
+
+      const matches = password.match(new RegExp(letter, "g"));
+      const count = matches?.length || 0;
+
+      if (count >= minOccurrences && count <= maxOccurrences) {
+        result.push(password);
+      }
+
+      return result;
+    }, []);
+
+  return validPasswords.length;
 }
 
-export const calculatePartTwo = () => {
-  return null;
+export const calculatePartTwo = (input: string) => {
+  const validPasswords = getInputLines(input)
+    .reduce((result, line) => {
+      const { range, letter, password } = getLineFragments(line);
+
+      const matches = range
+        .map((position) => password[position - 1])
+        .filter((x) => x === letter);
+
+      if (matches.length === 1) {
+        result.push(password);
+      }
+
+      return result;
+    }, []);
+
+  return validPasswords.length;
 }
 
 runWhenUsingCommandLine(() => {
-  const database = parseInput(readTextFile(path.join(__dirname, "input.txt")));
+  const input = readTextFile(path.join(__dirname, "input.txt"));
 
-  console.log("Part 1:", calculatePartOne(database));
-  console.log("Part 2:", calculatePartTwo());
+  console.log("Part 1:", calculatePartOne(input));
+  console.log("Part 2:", calculatePartTwo(input));
 });
