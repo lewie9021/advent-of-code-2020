@@ -7,7 +7,9 @@
   "private": true,
   "scripts": {
     "run:day-1": "ts-node src/day-1/dayOne.ts --execute",
-    "test:day-1": "jest src/day-1/__tests__"
+    "test:day-1": "jest src/day-1/__tests__",
+    "run:day-2": "ts-node src/day-2/dayTwo.ts --execute",
+    "test:day-2": "jest src/day-2/__tests__"
   },
   "devDependencies": {
     "@types/jest": "27.0.2",
