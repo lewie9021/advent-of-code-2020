@@ -10,54 +10,46 @@ interface LineFragments {
   password: string;
 }
 
-const getLineFragments = (line: string): LineFragments => {
-  const groups = line.match(/(\d+\-\d+)\s(\w)\:\s(\w+)/);
+const parseInput = (input: string): Array<LineFragments> => {
+  return getInputLines(input)
+    .map((line) => {
+      const groups = line.match(/(\d+\-\d+)\s(\w)\:\s(\w+)/);
 
-  const [min, max] = groups[1]
-    .split("-")
-    .map((x) => parseInt(x));
+      const [min, max] = groups[1]
+        .split("-")
+        .map((x) => parseInt(x));
 
-  return {
-    range: [min, max],
-    letter: groups[2],
-    password: groups[3],
-  };
+      return {
+        range: [min, max],
+        letter: groups[2],
+        password: groups[3],
+      };
+    });
 }
 
 export const calculatePartOne = (input: string) => {
-  const validPasswords = getInputLines(input)
-    .reduce((result, line) => {
-      const { range, letter, password } = getLineFragments(line);
+  const validPasswords = parseInput(input)
+    .filter(({ range, letter, password }) => {
       const [minOccurrences, maxOccurrences] = range;
 
       const matches = password.match(new RegExp(letter, "g"));
       const count = matches?.length || 0;
 
-      if (count >= minOccurrences && count <= maxOccurrences) {
-        result.push(password);
-      }
-
-      return result;
-    }, []);
+      return count >= minOccurrences && count <= maxOccurrences;
+    });
 
   return validPasswords.length;
 }
 
 export const calculatePartTwo = (input: string) => {
-  const validPasswords = getInputLines(input)
-    .reduce((result, line) => {
-      const { range, letter, password } = getLineFragments(line);
-
+  const validPasswords = parseInput(input)
+    .filter(({ range, letter, password }) => {
       const matches = range
         .map((position) => password[position - 1])
         .filter((x) => x === letter);
 
-      if (matches.length === 1) {
-        result.push(password);
-      }
-
-      return result;
-    }, []);
+      return matches.length === 1;
+    });
 
   return validPasswords.length;
 }
