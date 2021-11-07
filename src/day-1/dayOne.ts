@@ -1,11 +1,12 @@
 import path from "path";
 
-import { readFileLines } from "../helpers/fileSystem";
+import { readTextFile } from "../helpers/fileSystem";
 import { runWhenUsingCommandLine } from "../helpers/execution";
 import { multiply } from "../helpers/arrays";
+import { getInputLines } from "../helpers/input";
 
-const parseExpenseReport = (filePath: string) => {
-  return readFileLines(filePath)
+const parseInput = (input: string) => {
+  return getInputLines(input)
     .map((x) => parseInt(x));
 };
 
@@ -37,17 +38,17 @@ const findEntries = (numOfEntries: number, target: number, report: Array<number>
   }, []);
 }
 
-export const calculatePartOne = (target: number, report: Array<number>) => {
-  return multiply(findEntries(2, target, report));
+export const calculatePartOne = (input: string) => {
+  return multiply(findEntries(2, 2020, parseInput(input)));
 }
 
-export const calculatePartTwo = (target: number, report: Array<number>) => {
-  return multiply(findEntries(3, target, report))
+export const calculatePartTwo = (input: string) => {
+  return multiply(findEntries(3, 2020, parseInput(input)));
 }
 
 runWhenUsingCommandLine(() => {
-  const report = parseExpenseReport(path.join(__dirname, "input.txt"))
+  const input = readTextFile(path.join(__dirname, "input.txt"));
 
-  console.log("Part 1:", calculatePartOne(2020, report));
-  console.log("Part 2:", calculatePartTwo(2020, report));
+  console.log("Part 1:", calculatePartOne(input));
+  console.log("Part 2:", calculatePartTwo(input));
 });
