@@ -21,7 +21,7 @@ describe("Part 1", () => {
   });
 });
 
-describe("Part 1", () => {
+describe("Part 2", () => {
   it("returns 336 given the example input", () => {
     const input = [
       "..##.........##.........##.........##.........##.........##.......",
