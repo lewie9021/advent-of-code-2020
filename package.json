@@ -13,7 +13,9 @@
     "run:day-3": "ts-node src/day-3/dayThree.ts --execute",
     "test:day-3": "jest src/day-3/__tests__",
     "run:day-4": "ts-node src/day-4/dayFour.ts --execute",
-    "test:day-4": "jest src/day-4/__tests__"
+    "test:day-4": "jest src/day-4/__tests__",
+    "run:day-5": "ts-node src/day-5/dayFive.ts --execute",
+    "test:day-5": "jest src/day-5/__tests__"
   },
   "devDependencies": {
     "@types/jest": "27.0.2",
