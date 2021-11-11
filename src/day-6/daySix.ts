@@ -9,20 +9,30 @@ const parseInput = (input: string) => {
   return input.split(`${os.EOL}${os.EOL}`)
     .map((group) => {
       return group
-        .replace(new RegExp(os.EOL, "g"), "")
-        .split("");
+        .split(os.EOL)
+        .map((person) => person.split(""));
     });
 }
 
 export const calculatePartOne = (input: string) => {
   const counts = parseInput(input)
-    .map((group) => unique(group).length);
+    .map((group) => unique(group.flat()).length);
 
   return sum(counts);
 }
 
 export const calculatePartTwo = (input: string) => {
-  return parseInput(input)
+  const counts = parseInput(input)
+    .map((group) => {
+      const [firstPerson, ...rest] = group;
+      const matches = firstPerson.filter((question) => {
+        return rest.every((person) => person.includes(question))
+      });
+
+      return unique(matches).length;
+    });
+
+  return sum(counts);
 }
 
 runWhenUsingCommandLine(() => {

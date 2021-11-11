@@ -27,8 +27,24 @@ describe("Part 1", () => {
 
 describe("Part 2", () => {
   it("returns X given the example input", () => {
-    const input = [].join(os.EOL);
+    const input = [
+      "abc",
+      "",
+      "a",
+      "b",
+      "c",
+      "",
+      "ab",
+      "ac",
+      "",
+      "a",
+      "a",
+      "a",
+      "a",
+      "",
+      "b"
+    ].join(os.EOL);
 
-    expect(calculatePartTwo(input)).toEqual(null);
+    expect(calculatePartTwo(input)).toEqual(6);
   });
 });
