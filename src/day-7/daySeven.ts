@@ -72,8 +72,19 @@ export const calculatePartOne = (input: string) => {
   return result;
 }
 
+const getTotalBagCounts = (
+  type: string,
+  lookup: Record<string, Array<ItemCount>>,
+) => {
+  return lookup[type].reduce((res, item) => {
+    return res + item.count + item.count * getTotalBagCounts(item.type, lookup);
+  }, 0);
+}
+
 export const calculatePartTwo = (input: string) => {
-  return parseInput(input)
+  const lookup = parseInput(input);
+
+  return getTotalBagCounts("shiny gold", lookup);
 }
 
 runWhenUsingCommandLine(() => {

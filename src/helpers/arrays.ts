@@ -1,8 +1,12 @@
 export const sum = (array: Array<number>): number => {
-  return array.reduce((res, x) => res + x);
+  return array.reduce((res, x) => res + x, 0);
 }
 
 export const multiply = (array: Array<number>): number => {
+  if (!array.length) {
+    return 0;
+  }
+
   return array.reduce((res, x) => res * x);
 }
 
