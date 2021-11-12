@@ -7,7 +7,7 @@ import { getInputLines } from "../helpers/input";
 const parseInput = (input: string) => {
   return getInputLines(input)
     .map((line) => {
-      const match = line.match(/^(\w+) ([\+|\-]\d+)$/);
+      const match = line.match(/^(\w+) ([+|-]\d+)$/);
 
       return {
         operation: match[1],
@@ -64,6 +64,7 @@ const runProgram = (
     modified: false
   }
 ): number | null => {
+  // Detected an infinite loop.
   if (state.executed.includes(state.index)) {
     return state.accumulator;
   }
