@@ -21,51 +21,131 @@ interface Instruction {
   value: number;
 }
 
-const executeInstructions = (
-  instructions: Array<Instruction>,
-  index = 0,
-  accumulator = 0,
-  executed = []
-) => {
-  if (executed.includes(index)) {
-    return accumulator;
-  }
-
-  const instruction = instructions[index];
-
+const executeInstruction = (
+  instruction: Instruction,
+  state: ProgramState
+): ProgramState => {
   switch (instruction.operation) {
     case "acc":
-      return executeInstructions(
-        instructions,
-        index + 1,
-        accumulator + instruction.value,
-        [...executed, index]
-      );
+      return {
+        ...state,
+        index: state.index + 1,
+        accumulator: state.accumulator + instruction.value,
+        executed: [...state.executed, state.index],
+      };
     case "jmp":
-      return executeInstructions(
-        instructions,
-        index + instruction.value,
-        accumulator,
-        [...executed, index]
-      );
+      return {
+        ...state,
+        index: state.index + instruction.value,
+        executed: [...state.executed, state.index],
+      };
     case "nop":
-      return executeInstructions(
-      instructions,
-      index + 1,
-      accumulator,
-      [...executed, index]
-    );
+      return {
+        ...state,
+        index: state.index + 1,
+        executed: [...state.executed, state.index],
+      };
   }
-};
+}
+
+interface ProgramState {
+  index: number;
+  accumulator: number;
+  executed: Array<number>;
+  modified: boolean;
+}
+
+const runProgram = (
+  instructions: Array<Instruction>,
+  state: ProgramState = {
+    index: 0,
+    accumulator: 0,
+    executed: [],
+    modified: false
+  }
+): number | null => {
+  if (state.executed.includes(state.index)) {
+    return state.accumulator;
+  }
+
+  const instruction = instructions[state.index];
+
+  return runProgram(instructions, executeInstruction(instruction, state));
+}
+
+const getInstructionVariations = (instruction: Instruction) => {
+  let variations = [instruction];
+
+  if (instruction.operation === "jmp") {
+    variations.push({ operation: "nop", value: instruction.value });
+  }
+
+  if (instruction.operation === "nop") {
+    variations.push({ operation: "jmp", value: instruction.value });
+  }
+
+  return variations;
+}
+
+const runProgramV2 = (
+  instructions: Array<Instruction>,
+  state: ProgramState = {
+    index: 0,
+    accumulator: 0,
+    executed: [],
+    modified: false
+  }
+): number | null => {
+  // Detected an infinite loop.
+  if (state.executed.includes(state.index)) {
+    return null;
+  }
+
+  // Detected EOF.
+  if (state.index + 1 > instructions.length) {
+    return state.accumulator;
+  }
+
+  const instruction = instructions[state.index];
+  const variations = state.modified
+    ? [instruction]
+    : getInstructionVariations(instruction);
+
+  for (let i = 0; i < variations.length; i += 1) {
+    const variation = variations[i];
+    const modified = instruction.operation !== variation.operation;
+    const nextInstructions = modified
+      ? [
+        ...instructions.slice(0, state.index),
+        variation,
+        ...instructions.slice(state.index + 1),
+      ]
+      : instructions;
+
+    const nextState = executeInstruction(variation, state);
+    const accumulator = runProgramV2(nextInstructions, {
+      ...nextState,
+      modified: nextState.modified || modified
+    });
+
+    if (accumulator !== null) {
+      return accumulator;
+    }
+  }
+
+  return null;
+}
 
 export const calculatePartOne = (input: string) => {
   const instructions = parseInput(input);
 
-  return executeInstructions(instructions);
+  return runProgram(instructions);
 }
 
 export const calculatePartTwo = (input: string) => {
-  return parseInput(input)
+  const instructions = parseInput(input);
+
+  return runProgramV2(instructions);
 }
 
 runWhenUsingCommandLine(() => {

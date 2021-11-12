@@ -20,9 +20,19 @@ describe("Part 1", () => {
 });
 
 describe("Part 2", () => {
-  it("returns X given the example input", () => {
-    const input = [].join(os.EOL);
+  it("returns 8 given the example input", () => {
+    const input = [
+      "nop +0",
+      "acc +1",
+      "jmp +4",
+      "acc +3",
+      "jmp -3",
+      "acc -99",
+      "acc +1",
+      "jmp -4",
+      "acc +6"
+    ].join(os.EOL);
 
-    expect(calculatePartTwo(input)).toEqual(null);
+    expect(calculatePartTwo(input)).toEqual(8);
   });
 });
