@@ -1,5 +1,5 @@
 import os from "os";
-import { calculatePartOne, calculatePartTwo } from "../dayEight";
+import { calculatePartOne, calculatePartTwo } from "../day-8";
 
 describe("Part 1", () => {
   it("returns 5 given the example input", () => {
