@@ -19,3 +19,11 @@ export const unique = <T>(array: Array<T>) => {
     return res;
   }, []);
 }
+
+export const min = (array: Array<number>): number => {
+  return array.reduce((res, x) => x < res ? x : res);
+}
+
+export const max = (array: Array<number>): number => {
+  return array.reduce((res, x) => x > res ? x : res);
+}
